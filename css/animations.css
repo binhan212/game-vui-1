@@ -1,0 +1,186 @@
+/* ============================================================
+   TYPING TROLL — Animations
+   Cyberpunk · Synthwave · Lo-fi Dark
+   ============================================================ */
+
+/* --- Aurora background drift --- */
+@keyframes auroraShift {
+  0%   { background-position:   0%   0%; }
+  25%  { background-position: 100%  30%; }
+  50%  { background-position:  80% 100%; }
+  75%  { background-position:  20%  70%; }
+  100% { background-position:   0%   0%; }
+}
+
+/* --- Loading title gradient flow --- */
+@keyframes titleGradientFlow {
+  0%   { background-position: 0%   center; }
+  100% { background-position: 300% center; }
+}
+
+/* --- Neon title flicker (subtle, 2-frame blink deep into animation) --- */
+@keyframes titleFlicker {
+  0%, 92%, 100% {
+    text-shadow:
+      0 0 8px  rgba(0, 212, 255, 0.65),
+      0 0 22px rgba(0, 212, 255, 0.3),
+      0 0 45px rgba(0, 212, 255, 0.12);
+    opacity: 1;
+  }
+  93% {
+    text-shadow:
+      0 0 3px  rgba(0, 212, 255, 0.3),
+      0 0 8px  rgba(0, 212, 255, 0.1);
+    opacity: 0.85;
+  }
+  94% {
+    text-shadow:
+      0 0 8px  rgba(0, 212, 255, 0.65),
+      0 0 22px rgba(0, 212, 255, 0.3);
+    opacity: 1;
+  }
+  95.5% { opacity: 0.75; text-shadow: none; }
+  96%   { opacity: 1; }
+}
+
+/* --- Shake (wrong character) --- */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-5px); }
+  40%       { transform: translateX(5px); }
+  60%       { transform: translateX(-3px); }
+  80%       { transform: translateX(3px); }
+}
+
+.shake {
+  animation: shake 0.28s ease;
+}
+
+/* --- Bounce (new high score badge) --- */
+@keyframes bounce {
+  0%   { transform: scale(0.5); opacity: 0; }
+  55%  { transform: scale(1.18); opacity: 1; }
+  75%  { transform: scale(0.96); }
+  100% { transform: scale(1); }
+}
+
+.bounce {
+  animation: bounce 0.45s ease;
+}
+
+/* --- Bounce In (feedback popup) --- */
+@keyframes bounceIn {
+  0%   { transform: scale(0.8); opacity: 0; }
+  60%  { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+.bounce-in {
+  animation: bounceIn 0.28s ease;
+}
+
+/* --- Fade Out Up (healing popup dismiss) --- */
+@keyframes fadeOutUp {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -62%) scale(0.94);
+  }
+}
+
+.healing-popup--fade-out {
+  animation: fadeOutUp 0.45s ease forwards;
+}
+
+/* --- Fade Out (feedback text) --- */
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+.fade-out {
+  animation: fadeOut 0.5s ease forwards;
+}
+
+/* --- Slide Up (new sentence) --- */
+@keyframes slideUp {
+  from {
+    transform: translateY(18px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.slide-up {
+  animation: slideUp 0.28s ease;
+}
+
+/* --- Pulse (timer warning < 10s) --- */
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.08); }
+}
+
+.timer-warning {
+  animation: pulse 0.75s ease-in-out infinite;
+  color: var(--neon-pink) !important;
+}
+
+/* --- Heartbeat (healing icon) --- */
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  25%       { transform: scale(1.18); filter: drop-shadow(0 0 10px rgba(5, 255, 161, 0.8)); }
+  50%       { transform: scale(1); }
+  75%       { transform: scale(1.12); filter: drop-shadow(0 0 8px rgba(5, 255, 161, 0.6)); }
+}
+
+.healing-icon {
+  animation: heartbeat 1s ease-in-out 2;
+}
+
+/* --- Toast slide up --- */
+@keyframes toastSlideUp {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.toast-show {
+  animation: toastSlideUp 0.28s ease forwards;
+}
+
+/* --- Neon glow pulse (correct streak) --- */
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 6px rgba(0, 212, 255, 0.15); }
+  50%       { box-shadow: 0 0 20px rgba(0, 212, 255, 0.45), 0 0 40px rgba(0, 212, 255, 0.15); }
+}
+
+.streak-glow {
+  animation: glow 1.2s ease-in-out infinite;
+}
+
+/* --- Chill mode: slow aurora cycle --- */
+.mode-chill body::before {
+  animation-duration: 28s;
+}
+
+/* --- Cursor blink for current char --- */
+@keyframes cursorBlink {
+  0%, 100% { border-color: var(--neon-cyan); }
+  50%       { border-color: transparent; }
+}
+
+.char-current {
+  animation: cursorBlink 0.85s ease-in-out infinite;
+}

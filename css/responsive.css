@@ -1,0 +1,181 @@
+/* ============================================================
+   TYPING TROLL — Responsive Design
+   Mobile-first breakpoints
+   ============================================================ */
+
+/* --- Mobile (< 480px) --- */
+@media (max-width: 479px) {
+  .app-container {
+    padding: var(--space-sm);
+  }
+
+  .game-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-xs);
+    padding: var(--space-sm) 0;
+  }
+
+  .game-title {
+    font-size: 1.05rem;
+    letter-spacing: 0.08em;
+  }
+
+  .header-stats {
+    width: 100%;
+    justify-content: space-between;
+    font-size: 0.9rem;
+  }
+
+  .header-stats .timer {
+    font-size: 1.05rem;
+  }
+
+  .sentence-card {
+    padding: var(--space-md);
+    margin: var(--space-md) 0;
+    min-height: 110px;
+  }
+
+  .sentence-text {
+    font-size: 1.15rem;
+    line-height: 1.75;
+  }
+
+  .healing-sentence .sentence-text {
+    font-size: 1.1rem;
+  }
+
+  .typing-input {
+    font-size: 1rem;
+    padding: var(--space-md);
+    /* Sticky bottom for mobile keyboard */
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+  }
+
+  .stats-bar {
+    font-size: 0.76rem;
+    gap: var(--space-md);
+  }
+
+  .controls-bar {
+    gap: var(--space-xs);
+    padding: var(--space-sm) 0;
+  }
+
+  .mode-btn {
+    font-size: 0.72rem;
+    padding: var(--space-xs) var(--space-sm);
+  }
+
+  .loading-title {
+    font-size: 1.7rem;
+    letter-spacing: 0.08em;
+  }
+
+  .loading-tip {
+    font-size: 0.82rem;
+  }
+
+  .result-stats {
+    gap: var(--space-sm);
+  }
+
+  .result-stat-value {
+    font-size: 1.5rem;
+  }
+
+  .result-feedback {
+    font-size: 0.92rem;
+  }
+
+  .result-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .result-actions .btn {
+    width: 100%;
+  }
+
+  .healing-popup {
+    width: 92%;
+    padding: var(--space-md);
+  }
+
+  .healing-text {
+    font-size: 1rem;
+  }
+}
+
+/* --- Tablet (480px - 768px) --- */
+@media (min-width: 480px) and (max-width: 768px) {
+  .game-title {
+    font-size: 1.2rem;
+  }
+
+  .sentence-text {
+    font-size: 1.3rem;
+  }
+
+  .healing-sentence .sentence-text {
+    font-size: 1.25rem;
+  }
+
+  .typing-input {
+    font-size: 1.1rem;
+  }
+
+  .loading-title {
+    font-size: 2rem;
+  }
+}
+
+/* --- Desktop (> 768px) --- */
+@media (min-width: 769px) {
+  .app-container {
+    padding: var(--space-xl);
+  }
+
+  .sentence-card {
+    padding: var(--space-xl) var(--space-2xl);
+  }
+
+  .sentence-text {
+    font-size: 1.55rem;
+  }
+
+  .healing-sentence .sentence-text {
+    font-size: 1.5rem;
+  }
+
+  .typing-input {
+    font-size: 1.25rem;
+  }
+
+  .game-title {
+    font-size: 1.6rem;
+  }
+
+  .loading-title {
+    font-size: 3rem;
+  }
+
+  .result-stat-value {
+    font-size: 2.2rem;
+  }
+}
+
+/* --- Ensure touch targets are at least 44px --- */
+@media (pointer: coarse) {
+  .mode-btn,
+  .dark-mode-btn,
+  .btn {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

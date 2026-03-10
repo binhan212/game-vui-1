@@ -1,0 +1,17 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Write CSS redesign",
+			"type": "shell",
+			"command": "python _write_css.py",
+			"isBackground": false
+		},
+		{
+			"label": "Cleanup temp file",
+			"type": "shell",
+			"command": "del _write_css.py",
+			"isBackground": false
+		}
+	]
+}

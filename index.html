@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="Typing Troll — Gõ Nhanh Xả Stress & Ngẫm Đời. Mini-game typing test vui lầy, vừa cười vừa thấm!">
+  <meta name="theme-color" content="#07071a">
+
+  <title>Typing Troll — Gõ Nhanh Xả Stress & Ngẫm Đời</title>
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800&family=Baloo+2:wght@500;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/responsive.css">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Typing Troll — Gõ Nhanh Xả Stress & Ngẫm Đời">
+  <meta property="og:description" content="Mini-game typing test vui lầy cho gen Z Việt. Vừa cười vừa thấm!">
+  <meta property="og:type" content="website">
+</head>
+<body>
+
+  <!-- ========== LOADING SCREEN ========== -->
+  <div id="loading-screen" class="loading-screen">
+    <div class="loading-title">🎮 TYPING TROLL</div>
+    <div class="loading-subtitle">Gõ Nhanh Xả Stress & Ngẫm Đời</div>
+    <div class="loading-bar-container">
+      <div id="loading-bar" class="loading-bar"></div>
+    </div>
+    <p id="loading-tip" class="loading-tip">💛 Đang tải...</p>
+  </div>
+
+  <!-- ========== GAME SCREEN ========== -->
+  <div id="game-screen" class="app-container hidden">
+
+    <!-- Header -->
+    <header class="game-header">
+      <div>
+        <div class="game-title">
+          <span class="emoji">🎮</span> TYPING TROLL
+        </div>
+        <div class="game-subtitle">Gõ Nhanh Xả Stress & Ngẫm Đời</div>
+        <div id="best-wpm" class="best-wpm"></div>
+      </div>
+      <div class="header-stats">
+        <span id="timer-display" class="timer">60s</span>
+        <span id="wpm-display" class="wpm">0 WPM</span>
+      </div>
+    </header>
+
+    <!-- Sentence Display -->
+    <div class="sentence-card">
+      <span id="sentence-icon" class="sentence-icon">🤡</span>
+      <div id="sentence-display" class="sentence-text"></div>
+    </div>
+
+    <!-- Input -->
+    <div class="input-wrapper">
+      <input
+        type="text"
+        id="typing-input"
+        class="typing-input"
+        placeholder="Gõ lại câu ở trên..."
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+      >
+    </div>
+
+    <!-- Stats Bar -->
+    <div class="stats-bar">
+      <span class="stat" id="accuracy-display">100%</span>
+      <span class="stat" id="sentence-count">Câu: 0</span>
+      <span class="stat streak-display hidden" id="streak-display">🔥 0</span>
+    </div>
+
+    <!-- Feedback -->
+    <div id="feedback-container" class="feedback-container hidden">
+      <p id="feedback-text" class="feedback-text"></p>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls-bar">
+      <button id="mode-normal" class="mode-btn active">😎 Normal</button>
+      <button id="mode-chill" class="mode-btn">🧘 Chill</button>
+      <button id="btn-dark-mode" class="dark-mode-btn" aria-label="Toggle dark mode">🌙</button>
+    </div>
+
+  </div>
+
+  <!-- ========== RESULT SCREEN ========== -->
+  <div id="result-screen" class="result-screen hidden">
+    <div class="result-card">
+      <h2 class="result-title">🎯 Kết Quả</h2>
+
+      <div id="result-badge" class="result-badge hidden"></div>
+
+      <div class="result-stats">
+        <div class="result-stat">
+          <span id="result-wpm" class="result-stat-value">0</span>
+          <span class="result-stat-label">WPM</span>
+        </div>
+        <div class="result-stat">
+          <span id="result-accuracy" class="result-stat-value">0%</span>
+          <span class="result-stat-label">Chính xác</span>
+        </div>
+        <div class="result-stat">
+          <span id="result-sentences" class="result-stat-value">0</span>
+          <span class="result-stat-label">Câu</span>
+        </div>
+      </div>
+
+      <p id="result-feedback" class="result-feedback"></p>
+
+      <div id="result-healing-quote" class="result-healing-quote"></div>
+
+      <div class="result-actions">
+        <button id="btn-replay" class="btn btn-primary">🔄 Chơi lại</button>
+        <button id="btn-copy" class="btn btn-secondary">📋 Copy kết quả</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast hidden"></div>
+
+  <!-- Scripts — dependency order -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <!-- Sentence data — per-category files loaded before data.js -->
+  <script src="js/sentences/troll-crush.js"></script>
+  <script src="js/sentences/troll-ngheo.js"></script>
+  <script src="js/sentences/troll-deadline.js"></script>
+  <script src="js/sentences/troll-me.js"></script>
+  <script src="js/sentences/troll-mxh.js"></script>
+  <script src="js/sentences/troll-hoctap.js"></script>
+  <script src="js/sentences/troll-daily.js"></script>
+  <script src="js/sentences/troll-trietly.js"></script>
+  <script src="js/sentences/healing-yeuthuong.js"></script>
+  <script src="js/sentences/healing-truongthanh.js"></script>
+  <script src="js/sentences/healing-cuocsong.js"></script>
+  <script src="js/sentences/healing-dongluc.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/timer.js"></script>
+  <script src="js/scoring.js"></script>
+  <script src="js/effects.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/app.js"></script>
+
+  <!-- Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(() => {});
+      });
+    }
+  </script>
+
+</body>
+</html>
