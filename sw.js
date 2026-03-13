@@ -1,4 +1,4 @@
-const CACHE_NAME = 'typing-troll-v1';
+const CACHE_NAME = 'typing-troll-v2';
 const ASSETS = [
   '/',
   '/index.html',

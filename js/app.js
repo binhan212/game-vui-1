@@ -22,6 +22,10 @@ class TypingTrollGame {
     this.roundCount = 0;
     this.idleTimeout = null;
     this.lastResult = null;
+    this.committedCorrectChars = 0;
+    this.committedTotalChars = 0;
+    this.isComposing = false;
+    this.hadWrongInput = false;
   }
 
   init() {
@@ -43,6 +47,12 @@ class TypingTrollGame {
   bindEvents() {
     // Typing input
     dom.typingInput.addEventListener('input', (e) => this.onInput(e));
+    dom.typingInput.addEventListener('compositionstart', () => {
+      this.isComposing = true;
+    });
+    dom.typingInput.addEventListener('compositionend', () => {
+      this.isComposing = false;
+    });
 
     // Prevent paste
     dom.typingInput.addEventListener('paste', (e) => {
@@ -96,6 +106,8 @@ class TypingTrollGame {
   prepareNewRound() {
     this.correctChars = 0;
     this.totalChars = 0;
+    this.committedCorrectChars = 0;
+    this.committedTotalChars = 0;
     this.sentencesCompleted = 0;
     this.currentIndex = 0;
     this.trollStreak = 0;
@@ -103,6 +115,8 @@ class TypingTrollGame {
     this.wpm = 0;
     this.accuracy = 100;
     this.usedIds = new Set();
+    this.isComposing = false;
+    this.hadWrongInput = false;
 
     resetGameUI();
     this.loadNextSentence();
@@ -113,6 +127,7 @@ class TypingTrollGame {
     const sentence = getRandomSentence(this.mode, this.usedIds);
     this.currentSentence = sentence;
     this.currentIndex = 0;
+    this.hadWrongInput = false;
     this.usedIds.add(sentence.id);
 
     // Track troll streak
@@ -133,6 +148,38 @@ class TypingTrollGame {
     }
 
     renderSentence(this.currentSentence);
+  }
+
+  getVisibleChars(text) {
+    return Array.from((text || '').normalize('NFC'));
+  }
+
+  evaluateTypedInput(original, typed) {
+    const originalChars = this.getVisibleChars(original);
+    const typedChars = this.getVisibleChars(typed);
+    let correctChars = 0;
+    let streak = 0;
+    let hadWrong = typedChars.length > originalChars.length;
+
+    for (let i = 0; i < typedChars.length; i++) {
+      const isCorrect = i < originalChars.length && typedChars[i] === originalChars[i];
+      if (isCorrect) {
+        correctChars++;
+        streak++;
+      } else {
+        hadWrong = true;
+        streak = 0;
+      }
+    }
+
+    return {
+      correctChars,
+      totalChars: typedChars.length,
+      typedLength: typedChars.length,
+      allCorrect: typedChars.length === originalChars.length && correctChars === originalChars.length,
+      hadWrong,
+      streak,
+    };
   }
 
   startIdleTimer() {
@@ -174,59 +221,54 @@ class TypingTrollGame {
     if (this.state !== 'playing') return;
 
     const original = this.currentSentence.text;
+    const inputState = this.evaluateTypedInput(original, typed);
 
-    // Count chars for accuracy (handle multiple chars between events)
-    const prevIndex = this.currentIndex;
-    let hadWrong = false;
-    for (let i = prevIndex; i < Math.min(typed.length, original.length); i++) {
-      this.totalChars++;
-      if (typed[i] === original[i]) {
-        this.correctChars++;
-        this.correctStreak++;
-      } else {
-        this.correctStreak = 0;
-        hadWrong = true;
-      }
+    if (inputState.hadWrong && !this.hadWrongInput) {
+      shakeElement(dom.sentenceDisplay);
     }
-    if (hadWrong) shakeElement(dom.sentenceDisplay);
+    this.hadWrongInput = inputState.hadWrong;
 
-    this.currentIndex = typed.length;
+    this.currentIndex = inputState.typedLength;
+    this.correctChars = this.committedCorrectChars + inputState.correctChars;
+    this.totalChars = this.committedTotalChars + inputState.totalChars;
+    this.correctStreak = inputState.streak;
 
     // Update visuals
     updateCharHighlight(original, typed);
     this.updateLiveStats();
 
-    // Check sentence completion
-    if (typed.length >= original.length) {
-      // Verify all chars match
-      let allCorrect = true;
-      for (let i = 0; i < original.length; i++) {
-        if (typed[i] !== original[i]) {
-          allCorrect = false;
-          break;
-        }
-      }
-
-      this.sentencesCompleted++;
-      updateSentenceCount(this.sentencesCompleted);
-
-      // Show feedback
-      const feedbackText = getSentenceFeedback(
-        this.currentSentence.isHealing,
-        this.wpm,
-        this.trollStreak,
-        this.mode
-      );
-
-      if (this.currentSentence.isHealing) {
-        showHealingPopup(feedbackText);
-      } else {
-        showTrollFeedback(feedbackText);
-      }
-
-      // Load next
-      this.loadNextSentence();
+    if (this.isComposing || e.isComposing) {
+      return;
     }
+
+    if (!inputState.allCorrect) {
+      return;
+    }
+
+    this.committedCorrectChars += inputState.correctChars;
+    this.committedTotalChars += inputState.totalChars;
+    this.correctChars = this.committedCorrectChars;
+    this.totalChars = this.committedTotalChars;
+
+    this.sentencesCompleted++;
+    updateSentenceCount(this.sentencesCompleted);
+
+    // Show feedback
+    const feedbackText = getSentenceFeedback(
+      this.currentSentence.isHealing,
+      this.wpm,
+      this.trollStreak,
+      this.mode
+    );
+
+    if (this.currentSentence.isHealing) {
+      showHealingPopup(feedbackText);
+    } else {
+      showTrollFeedback(feedbackText);
+    }
+
+    // Load next
+    this.loadNextSentence();
   }
 
   updateLiveStats() {

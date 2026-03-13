@@ -6,6 +6,10 @@
 // Cached DOM references
 const dom = {};
 
+function getVisibleChars(text) {
+  return Array.from((text || '').normalize('NFC'));
+}
+
 function cacheDom() {
   dom.loadingScreen = document.getElementById('loading-screen');
   dom.gameScreen = document.getElementById('game-screen');
@@ -140,9 +144,10 @@ function renderSentence(sentence) {
   dom.sentenceIcon.textContent = sentence.isHealing ? '💛' : '🤡';
   dom.sentenceDisplay.parentElement.classList.toggle('healing-sentence', sentence.isHealing);
 
-  for (let i = 0; i < sentence.text.length; i++) {
+  const visibleChars = getVisibleChars(sentence.text);
+  for (let i = 0; i < visibleChars.length; i++) {
     const span = document.createElement('span');
-    span.textContent = sentence.text[i];
+    span.textContent = visibleChars[i];
     span.className = i === 0 ? 'char-current' : 'char-pending';
     dom.sentenceDisplay.appendChild(span);
   }
@@ -155,11 +160,13 @@ function renderSentence(sentence) {
 }
 
 function updateCharHighlight(original, typed) {
+  const originalChars = getVisibleChars(original);
+  const typedChars = getVisibleChars(typed);
   const chars = dom.sentenceDisplay.children;
-  for (let i = 0; i < original.length; i++) {
-    if (i < typed.length) {
-      chars[i].className = typed[i] === original[i] ? 'char-correct' : 'char-wrong';
-    } else if (i === typed.length) {
+  for (let i = 0; i < originalChars.length; i++) {
+    if (i < typedChars.length) {
+      chars[i].className = typedChars[i] === originalChars[i] ? 'char-correct' : 'char-wrong';
+    } else if (i === typedChars.length) {
       chars[i].className = 'char-current';
     } else {
       chars[i].className = 'char-pending';
